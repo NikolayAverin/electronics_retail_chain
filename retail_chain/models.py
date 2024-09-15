@@ -16,7 +16,7 @@ class Contact(models.Model):
 
     def __str__(self):
         return (
-            f"{self.email} из {self.country}, {self.city}, {self.street}, {self.house}"
+            f"{self.email} из {self.country}, {self.city}, {self.street}, {self.house_number}"
         )
 
     class Meta:
@@ -30,7 +30,7 @@ class Product(models.Model):
     release_date = models.DateField(verbose_name="Дата выхода продукта на рынок")
 
     def __str__(self):
-        return f"{self.title}, {self.model} вышел на рынок {self.release_date}"
+        return f"{self.title}, {self.product_model} вышел на рынок {self.release_date}"
 
     class Meta:
         verbose_name = "Продукт"
@@ -65,6 +65,8 @@ class HierarchyElement(models.Model):
     hierarchy_level = models.IntegerField(
         default=0, verbose_name="Уровень звена иерархии"
     )
+    country = models.CharField(max_length=50, default=None, blank=True, null=True, verbose_name="Страна")
+    city = models.CharField(max_length=50, default=None, blank=True, null=True, verbose_name="Город")
 
     def __str__(self):
         return f"{self.name} - {self.contact}, {self.product}"

@@ -1,7 +1,10 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from rest_framework.viewsets import ModelViewSet
 
-from retail_chain.models import Contact, Product
-from retail_chain.serializers import ContactSerializer, ProductSerializer
+from retail_chain.models import Contact, Product, HierarchyElement
+from retail_chain.serializers import ContactSerializer, ProductSerializer, HierarchyElementSerializer, \
+    HierarchyElementViewSerializer
 from users.permissions import IsActive
 
 
@@ -19,3 +22,28 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (IsActive,)
+
+
+class HierarchyElementViewSet(ModelViewSet):
+    """Вьюсет для модели звена иерархии."""
+    queryset = HierarchyElement.objects.all()
+    serializer_class = HierarchyElementSerializer
+    permission_classes = (IsActive,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('country',)
+
+    def get_serializer_class(self):
+        if self.action in ("list", "retrieve"):
+            return HierarchyElementViewSerializer
+        return super().get_serializer_class()
+
+    def perform_create(self, serializer):
+        element = serializer.save()
+        element.country = element.contact.country
+        element.city = element.contact.city
+        if element.supplier:
+            element.hierarchy_level = element.supplier.hierarchy_level + 1
+        else:
+            element.hierarchy_level = 0
+        element.save()
+
