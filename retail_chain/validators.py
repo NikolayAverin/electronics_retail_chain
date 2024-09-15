@@ -3,6 +3,7 @@ from rest_framework.serializers import ValidationError
 
 class SupplierValidator:
     """Валидатор для проверки отсутствия поставщика у завода и наличия поставщика у розничной сети и ИП."""
+
     def __init__(self, supplier, hierarchy_type):
         self.supplier = supplier
         self.hierarchy_type = hierarchy_type

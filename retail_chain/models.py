@@ -8,6 +8,8 @@ HIERARCHY_TYPE = [
 
 
 class Contact(models.Model):
+    """Модель контактной информации."""
+
     email = models.EmailField(max_length=100, unique=True, verbose_name="Почта")
     country = models.CharField(max_length=50, verbose_name="Страна")
     city = models.CharField(max_length=50, verbose_name="Город")
@@ -15,9 +17,7 @@ class Contact(models.Model):
     house_number = models.PositiveSmallIntegerField(verbose_name="Номер дома")
 
     def __str__(self):
-        return (
-            f"{self.email} из {self.country}, {self.city}, {self.street}, {self.house_number}"
-        )
+        return f"{self.email} из {self.country}, {self.city}, {self.street}, {self.house_number}"
 
     class Meta:
         verbose_name = "Контакт"
@@ -25,6 +25,8 @@ class Contact(models.Model):
 
 
 class Product(models.Model):
+    """Модель продукта."""
+
     title = models.CharField(max_length=100, verbose_name="Наименование")
     product_model = models.CharField(max_length=250, verbose_name="Модель")
     release_date = models.DateField(verbose_name="Дата выхода продукта на рынок")
@@ -38,6 +40,8 @@ class Product(models.Model):
 
 
 class HierarchyElement(models.Model):
+    """Модель элемента иерархии."""
+
     name = models.CharField(max_length=150, verbose_name="Название звена иерархии")
     contact = models.ForeignKey(
         Contact, on_delete=models.CASCADE, verbose_name="Контакты"
@@ -65,8 +69,12 @@ class HierarchyElement(models.Model):
     hierarchy_level = models.IntegerField(
         default=0, verbose_name="Уровень звена иерархии"
     )
-    country = models.CharField(max_length=50, default=None, blank=True, null=True, verbose_name="Страна")
-    city = models.CharField(max_length=50, default=None, blank=True, null=True, verbose_name="Город")
+    country = models.CharField(
+        max_length=50, default=None, blank=True, null=True, verbose_name="Страна"
+    )
+    city = models.CharField(
+        max_length=50, default=None, blank=True, null=True, verbose_name="Город"
+    )
 
     def __str__(self):
         return f"{self.name} - {self.contact}, {self.product}"
